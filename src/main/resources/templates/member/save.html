@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>save.html</title>
+    <style>
+        .field-error {
+            color: red;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        /* 아이디 입력을 하는 동안에 idDuplicate() 함수를 호출하고 입력된 값을 콘솔에 출력 */
+        function emailCheck(){
+            const email = document.getElementById('memberEmail').value;
+            const form = document.getElementById('save_form')
+            $.ajax({
+                type: 'post', // 전송방식(get, post, put 등)
+                url: '/member/emailCheck', // 요청주소(controller로 요청하는 주소)
+                data: {'memberEmail': email},	// 전송할 데이터
+                dataType: 'text', // 요청 후 리턴받을 때의 데이터 형식
+                success: function(result) {	// 요청이 성공적으로 처리됐을때 실행 할 함수
+                    if(result=="ok"){
+                        form.submit();
+                    } else {
+                        alert("이미 존재하는 이메일입니다");
+                    }
+                },
+                error: function() {
+                    console.log('오타 찾으세요.');
+                },
+            });
+        }
+    </script>
+</head>
+<body>
+<h2>save.html</h2>
+
+<form action="/member/save" method="post" enctype="multipart/form-data" th:object="${member}">
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p class="field-error" th:each="err: ${#fields.globalErrors()}" th:text="${err}">글로벌오류</p>
+    </div>
+    이메일: <input type="text" th:field="*{memberEmail}"  onblur="emailCheck()" id="memberEmail" placeholder="필수입력항목(5~20자)"><br>
+    <span id="save_form"></span> <br>
+    <p th:if="${#fields.hasErrors('memberEmail')}" th:errors="*{memberEmail}" th:errorclass="field-error"></p>
+    비밀번호: <input type="text" th:field="*{memberPassword}" placeholder="필수입력항목(5~20자)"><br>
+    <p th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}" th:errorclass="field-error"></p>
+    이름: <input type="text" th:field="*{memberName}" placeholder="필수입력항목(5~20자)"><br>
+    <p th:if="${#fields.hasErrors('memberName')}" th:errors="*{memberName}" th:errorclass="field-error"></p>
+    전화번호: <input type="text" th:field="*{memberPhone}" placeholder="필수입력항목(5~20자)"><br>
+    <p th:if="${#fields.hasErrors('memberPhone')}" th:errors="*{memberPhone}" th:errorclass="field-error"></p>
+    사진: <input type="file" th:field="*{memberFile}"><br>
+    <input type="submit" value="회원가입">
+</form><br>
+<a href="/member/logout">로그아웃</a><br><br><br>
+<a href = "/">홈으로</a><br>
+</body>
+</html>

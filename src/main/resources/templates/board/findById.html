@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>findById.html</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+</head>
+<body>
+<h2>findById.html</h2>
+
+
+
+<!-- 수정기능을 만들어봅시다. 수정화면(update.html)에서 비밀번호를 입력받고 일치하면 수정처리,
+     일치하지 않으면 수정처리를 하지 않음.
+     수정처리도 Post 방식(폼에서 바로 요청하는)
+              put방식(ajax를 이용하여 요청하는) 두가지로 모두 해봅시다.
+     수정이 완료되면 수정 후 상세페이지를 출력-->
+
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>작성자</th>
+        <th>제목</th>
+        <th>내용</th>
+        <!--        <th>작성시간</th>-->
+        <th>파일이름</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${board.boardId}"</td>
+        <td th:text="${board.boardWriter}"</td>
+        <td th:text="${board.boardTitle}"</td>
+        <td th:text="${board.boardContents}"</td>
+        <!--        <td th:text="${board.boardDate}"</td>-->
+        <td th:text="${board.boardFilename}"</td>
+
+        <!--        <td><<a th:href="@{|/member/delete/${member.memberId}|}">삭제(get)</a></td>-->
+        <!--        <td><a th:href="@{|/member/update/${member.memberId}|}">수정(get)</a></td>-->
+
+
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${session.loginEmail == 'board.boardWriter'}">
+    <a th:href="@{|/board/update/${board.boardId}|}">수정</a>
+    <a th:href="@{|/board/delete/${board.boardId}|}">삭제</a>
+</div>
+
+<div id="comment-write">
+    <input type="text" id="commentWriter" th:value="${session.loginEmail}" placeholder="작성자">
+    <input type="text" id="commentContents" placeholder="내용"><br>
+    <button id="comment-write-btn">댓글등록</button>
+</div>
+<br><br>
+<!--<div id="comment-area">-->
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>댓글번호</th>-->
+<!--            <th>작성자</th>-->
+<!--            <th>내용</th>-->
+<!--            <th>작성시간</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--    </table>-->
+<!--</div>-->
+
+
+로그인ID(email_session): <p th:text="${session['loginEmail']}"></p>
+<br>
+<a href="/member/logout">로그아웃</a><br><br>
+<a href = "/">홈으로</a><br>
+
+<!-- 댓글목록 출력 -->
+<div id="comment-list">
+    <table class="table">
+        <tr>
+            <th>댓글번호</th>
+            <th>작성자</th>
+            <th>내용</th>
+            <th>작성시간</th>
+        </tr>
+        <tr th:each="comment:${commentList}" >
+            <td th:text="${comment.commentId}"></td>
+            <td th:text="${comment.commentWriter}"></td>
+            <td th:text="${comment.commentContents}"></td>
+            <td th:text="${comment.createTime}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+<script>
+    $("#comment-write-btn").click(function () {
+        console.log('댓글 등록 버튼 클릭');
+        // const commentWriter = $("#commentWriter").val();
+        const commentWriter = '[[${board.boardWriter}]]';
+        const commentContents = $("#commentContents").val();
+        const boardId = '[[${board.boardId}]]';
+        $.ajax({
+            type: 'post',
+            url: '/comment/save',
+            data: {
+                'commentWriter': commentWriter,
+                'commentContents': commentContents,
+                'boardId': boardId
+            },
+            dataType:'json',
+            success: function (result) {
+                console.log(result);
+                let output = "<table class='table'>";
+                output += "<tr><th>댓글번호</th>";
+                output += "<th>작성자</th>";
+                output += "<th>내용</th>";
+                output += "<th>작성시간</th></tr>";
+                for(let i in result){
+                    output += "<tr>";
+                    output += "<td>"+result[i].commentId+"</td>";
+                    output += "<td>"+result[i].commentWriter+"</td>";
+                    output += "<td>"+result[i].commentContents+"</td>";
+                    output += "<td>"+result[i].createTime+"</td>";
+                    output += "</tr>";
+                }
+                output += "</table>";
+                // id가 comment-list인 div에 출력
+                document.getElementById('comment-list').innerHTML = output;
+                // 댓글 입력창을 비움.
+                document.getElementById('commentWriter').value='';
+                document.getElementById('commentContents').value='';
+            },
+            error: function () {
+                alert('ajax 실패');
+            }
+        });
+    });
+</script>
+
+</html>

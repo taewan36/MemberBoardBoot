@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>findAll.html</title>
+</head>
+<body>
+<h2>findAll.html</h2>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>이메일</th>
+        <th>비밀번호</th>
+        <th>이름</th>
+        <th>전화번호</th>
+        <th>파일이름</th>
+        <th>가입일</th>
+        <th>수정일</th>
+        <th>조회</th>
+        <!--            <th>조회(ajax)</th>-->
+        <th>삭제(get)</th>
+        <!--            <th>삭제(delete)</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member: ${memberList}">
+        <td th:text="${member.memberId}">번호</td>
+        <td th:text="${member.memberEmail}">이메일</td>
+        <td th:text="${member.memberPassword}">비밀번호</td>
+        <td th:text="${member.memberName}">이름</td>
+        <td th:text="${member.memberPhone}">전화번호</td>
+        <td th:text="${member.memberFilename}">파일이름</td>
+        <td th:text="${member.createTime}">가입일</td>
+        <td th:text="${member.updateTime}">수정일</td>
+        <td><a th:href="@{|/member/${member.memberId}|}">조회</a></td>
+        <!--            <td><button th:onclick="detail([[${member.memberId}]])">조회(Ajax)</button></td>-->
+        <td><a th:href="@{|/member/delete/${member.memberId}|}">삭제(get)</a></td>
+        <td>
+            <!-- 삭제 버튼 클릭 시 deleteById 함수 호출
+                 함수 호출하면서 memberId를 넘겨야 함.
+                 delete 함수(): /member/memberId 주소를 요청하며, 요청 메서드는 delete -->
+            <!--                <button th:onclick="deleteById([[${member.memberId}]])">삭제(delete_Ajax)</button><td>-->
+    </tr>
+    </tbody>
+</table>
+<a href="/member/logout">로그아웃</a><br><br><br>
+로그인ID(email_session): <p th:text="${session['loginEmail']}"></p>
+<br>
+<a href = "/">홈으로</a><br>
+
+</body>
+</html>

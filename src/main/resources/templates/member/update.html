@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>update.html</title>
+    <script>
+        const memberUpdate = () => {
+
+            const inputPassword = document.getElementById('memberPassword').value;
+            console.log(inputPassword);
+            const memberPassword ="[[${member.memberPassword}]]";
+            console.log(memberPassword);
+            if(inputPassword==memberPassword) {
+                updateForm.submit();
+            } else {
+                alert('비밀번호가 틀렸습니다.');
+            }
+        }
+    </script>
+</head>
+<body>
+<h2>update.html</h2>
+<form action="/member/update" name="updateForm" method="post">
+    <input type="hidden" name="memberId" th:value="${member.memberId}" id="memberId" ><br>
+    <input type="text" name="memberEmail" placeholder="회원이메일" th:value="${member.memberEmail}" readonly id="memberEmail"><br>
+    <input type="text" name="memberPassword" placeholder="비밀번호" th:valu id="memberPassword"><br>
+    <input type="text" name="memberName"  placeholder="이름" th:value="${member.memberName}"  id="memberName"><br>
+    <input type="text" name="memberPhone"  placeholder="전화번호" th:value="${member.memberPhone}"  id="memberPhone"><br>
+    <input type="text" name="memberFilename"  placeholder="파일이름" th:value="${member.memberFilename}"  id="memberFilename"><br>
+    <input type="button" value="수정(put)" th:onclick="boardUpdate()">
+    <!--    <input type="button" value="수정(post)" th:onclick="update()">-->
+</form>
+
+<a href="/member/logout">로그아웃</a><br><br><br>
+로그인ID(email_session): <p th:text="${session['loginEmail']}"></p>
+<br>
+<a href="/member/logout">로그아웃</a><br><br><br>
+<a href = "/">홈으로</a><br>
+
+</body>
+</html>

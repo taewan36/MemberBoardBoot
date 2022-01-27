@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>update.html</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        const boardUpdate = () => {
+            const id=document.getElementById("boardId").value;
+
+            const reqUrl="/board/"+id;
+
+            var form = $('#boardUp')[0];
+            var data = new FormData(form);
+            console.log(data);
+
+            $.ajax({
+                type: 'PUT',
+                enctype: 'multipart/form-data',
+                url:reqUrl,
+                data: data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function(){
+                    location.href="/board/"+id;
+                },
+                error: function (){
+                    alert("아작이 또 또 실패")
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h2>update.html</h2>
+<form action="/board/update" id="boardUp"  name="boardUp">
+    <input type="hidden" name="boardId" th:value="${board.boardId}" id="boardId" ><br>
+    <input type="text" name="boardWriter" placeholder="작성자" th:value="${board.boardWriter}" readonly id="boardWriter"><br>
+    <input type="text" name="boardTitle"  placeholder="제목" th:value="${board.boardTitle}"  id="boardTitle"><br>
+    <input type="text" name="boardContents"  placeholder="내용" th:value="${board.boardContents}"  id="boardContents"><br>
+    <input type="text" name="boardFilename"  placeholder="파일이름" th:value="${board.boardFilename}"  id="boardFilename"><br>
+    <input type="button" value="수정(put)" th:onclick="boardUpdate()">
+    <!--        <input type="button" value="수정(post)" th:onclick="update()">-->
+</form>
+
+<a href="/member/logout">로그아웃</a><br><br><br>
+로그인ID(email_session): <p th:text="${session['loginEmail']}"></p>
+<br>
+<a href="/member/logout">로그아웃</a><br><br><br>
+<a href = "/">홈으로</a><br>
+
+</body>
+</html>

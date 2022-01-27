@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>findById.html</title>
+</head>
+<body>
+<h2>findById.html</h2>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>이메일</th>
+        <th>비밀번호</th>
+        <th>이름</th>
+        <th>전화번호</th>
+        <th>파일이름</th>
+        <!--            <th>가입일</th>-->
+        <th>삭제</th>
+        <th>수정</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${member.memberId}"</td>
+        <td th:text="${member.memberEmail}"</td>
+        <td th:text="${member.memberPassword}"</td>
+        <td th:text="${member.memberName}"</td>
+        <td th:text="${member.memberPhone}"</td>
+        <td th:text="${member.memberFilename}"</td>
+        <!--            <td th:text="${member.memberDate}"</td>-->
+        <td><a th:href="@{|/member/delete/${member.memberId}|}">삭제(get)</a></td>
+        <td><a th:href="@{|/member/update/${member.memberId}|}">수정</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/member/logout">로그아웃</a><br><br><br>
+로그인ID(email_session): <p th:text="${session['loginEmail']}"></p>
+<br>
+<a href="/member/logout">로그아웃</a><br><br><br>
+<a href = "/">홈으로</a><br>
+
+</body>
+</html>
